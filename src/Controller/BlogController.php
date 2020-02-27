@@ -1,10 +1,15 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\BlogPost;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * @Route("/blog")
@@ -30,7 +35,7 @@ class BlogController extends AbstractController
     ];
 
     /**
-     * @Route("/{page}", name="blog_list", defaults={"page": 5})
+     * @Route("/{page}", name="blog_list", defaults={"page": 5}, requirements={"page"="\d+"})
      */
     public function list($page, Request $request)
     {
@@ -64,5 +69,26 @@ class BlogController extends AbstractController
         return $this->json(
             self::POSTS[array_search($slug, array_column(self::POSTS, 'slug')) ]
         );
+    }
+
+    /**
+     * @Route("/add", name="blog_add", methods={"POST"})
+     */
+
+    public function add(Request $request)
+    {
+        /** @var Serializer $serializer */
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+
+        $serializer = new Serializer($normalizers, $encoders);
+
+        $blogPost =  $serializer->deserialize($request->getContent(), BlogPost::class, 'json');
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($blogPost);
+        $em->flush();
+
+        return $this->json($blogPost);
+
     }
 }
