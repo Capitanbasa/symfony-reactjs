@@ -63,10 +63,10 @@ class BlogPost
         return $this->published;
     }
 
-    public function setPublished(string $published): self
+    public function setPublished(\DateTimeInterface $published): self
     {
 
-        $this->published = new \DateTime($published);
+        $this->published = $published;
      
         return $this;
     }

@@ -1,0 +1,12 @@
+easy_admin:
+   site_name: 'ACME Corp.'
+   design:
+      brand_color: '#00a4e4'
+   user:
+      display_name: true
+      display_avatar: true
+   entities:
+#        # List the entity class name you want to manage
+       - App\Entity\BlogPost
+#        - App\Entity\Category
+#        - App\Entity\User
