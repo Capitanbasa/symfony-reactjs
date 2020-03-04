@@ -2,11 +2,16 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
+use App\Entity\BlogPost;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *      itemOperations={"get"},
+ *      collectionOperations={"get"}
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
  */
 class Comment
@@ -27,11 +32,18 @@ class Comment
      * @ORM\Column(type="datetime")
      */
     private $published;
+
     /**
-     * ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $author;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\BlogPost", inversedBy="comments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $blogPost;
 
     public function getId(): ?int
     {
@@ -71,11 +83,23 @@ class Comment
     }
 
     /**
-     * @return User $author
+     * @param User $author
      */
     public function setAuthor( User $author): self
     {
         $this->author = $author;
         return $this;
     }
+
+    public function getBlogPost(): BlogPost
+    {
+        return $this->blogPost;
+    }
+
+    public function setBlogPost( BlogPost $blogPost): self
+    {
+        $this->blogPost = $blogPost;
+        return $this;
+    }
+    
 }

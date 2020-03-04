@@ -6,12 +6,16 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *      itemOperations={"get"},
+ *      collectionOperations={}
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
@@ -39,10 +43,12 @@ class User
      * @ORM\Column(type="string", length=255)
      */
     private $email;
+
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\BlogPost", mappedBy="author")
      */
     private $posts;
+
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="author")
      */
@@ -118,8 +124,21 @@ class User
     /**
      * @return Collection
      */
-    public function getComments(): Collection
+    public function getComment(): Collection
     {
         return $this->comments;
+    }
+
+    public function getRoles(){
+        return ['ROLE_USER'];
+    }
+
+    public function getSalt(){
+        return null;
+    }
+
+    public function eraseCredentials()
+    {
+
     }
 }
