@@ -23,7 +23,6 @@ class AppFixtures extends Fixture
         $this->loadUsers($manager);
         $this->loadBlogPost($manager);
         $this->loadComments($manager);
-        
     }
 
     public function loadBlogPost(ObjectManager $manager)
