@@ -7,12 +7,13 @@ use App\Entity\Comment;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
  * @ApiResource(
  *      itemOperations={"get"},
- *      collectionOperations={"get"}
+ *      collectionOperations={"get", "post"}
  * )
  */
 class BlogPost
@@ -26,16 +27,22 @@ class BlogPost
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(min=8, max=255)
      */
     private $title;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\NotBlank()
+     * @Assert\DateTime()
      */
     private $published;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank()
+     * @Assert\Length(min=8, max=255)
      */
     private $content;
 
@@ -47,6 +54,7 @@ class BlogPost
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank()
      */
     private $slug;
 
